@@ -1,10 +1,17 @@
 package me.guillaume.duel;
 
-public class Swordsman extends Fighter {
+import static me.guillaume.duel.Buckler.BUCKLER;
+
+import java.util.Optional;
+
+public class Swordsman extends Warrior {
+
+	private final Swordsman swordsman = this;
 
 	public Swordsman() {
 		hitPoints = SWORDSMAN_HITPOINTS;
-		weapon = new Weapon(Weapon.SWORD_DAMAGE);
+		weapon = new Weapon(Weapon.SWORD, Weapon.SWORD_DAMAGE);
+		buckler = Optional.empty();
 	}
 
 	public Swordsman(String string) {
@@ -13,7 +20,7 @@ public class Swordsman extends Fighter {
 	@Override
 	public Swordsman equip(String item) {
 		if (BUCKLER.equals(item)) {
-			this.setBuckler(true);
+			buckler = Optional.of(new Buckler());
 		}
 		return this;
 	}
@@ -22,36 +29,13 @@ public class Swordsman extends Fighter {
 	}
 
 	public void engage(Viking viking) {
-		int swordsmansBucklerHits = 0;
-		int swordsmansBucklerLife = 3;
-		int vikingsBucklerHits = 0;
-
-		while (this.hitPoints > 0 && viking.hitPoints() > 0) {
-
-			if (!viking.hasBuckler()) {
-				hit(this, viking);
-			} else {
-				vikingsBucklerHits++;
-				if (vikingsBucklerHits % 2 != 0) {
-					hit(this, viking);
-				}
-			}
-
-			if (!this.hasBuckler()) {
-				hit(viking, this);
-			} else {
-				swordsmansBucklerHits++;
-				if (swordsmansBucklerHits % 2 != 0 || swordsmansBucklerLife == 0) {
-					hit(viking, this);
-				} else {
-					swordsmansBucklerLife--;
-				}
-			}
+		while (swordsman.hitPoints() > 0 && viking.hitPoints() > 0) {
+			strike(swordsman, viking);
+			strike(viking, swordsman);
 		}
 
-		setHitPointsToZeroIfHitPointsAreNegative(this);
+		setHitPointsToZeroIfHitPointsAreNegative(swordsman);
 		setHitPointsToZeroIfHitPointsAreNegative(viking);
-
 	}
 
 }
