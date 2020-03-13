@@ -1,17 +1,21 @@
 package me.guillaume.duel;
 
-public class Swordsman {
-
-	public static final int WEAPON_DAMAGE = 5;
-	public static final String BUCKLER = "buckler";
-
-	private int hitPoints = 100;
-	private boolean hasBuckler = false;
+public class Swordsman extends Fighter {
 
 	public Swordsman() {
+		hitPoints = SWORDSMAN_HITPOINTS;
+		weapon = new Weapon(Weapon.SWORD_DAMAGE);
 	}
 
 	public Swordsman(String string) {
+	}
+
+	@Override
+	public Swordsman equip(String item) {
+		if (BUCKLER.equals(item)) {
+			this.setBuckler(true);
+		}
+		return this;
 	}
 
 	public void engage(Highlander highlander) {
@@ -25,48 +29,29 @@ public class Swordsman {
 		while (this.hitPoints > 0 && viking.hitPoints() > 0) {
 
 			if (!viking.hasBuckler()) {
-				viking.setHitPoints(viking.hitPoints() - Swordsman.WEAPON_DAMAGE);
+				hit(this, viking);
 			} else {
 				vikingsBucklerHits++;
 				if (vikingsBucklerHits % 2 != 0) {
-					viking.setHitPoints(viking.hitPoints() - Swordsman.WEAPON_DAMAGE);
+					hit(this, viking);
 				}
 			}
 
 			if (!this.hasBuckler()) {
-				this.hitPoints -= Viking.WEAPON_DAMAGE;
+				hit(viking, this);
 			} else {
 				swordsmansBucklerHits++;
 				if (swordsmansBucklerHits % 2 != 0 || swordsmansBucklerLife == 0) {
-					this.hitPoints -= Viking.WEAPON_DAMAGE;
+					hit(viking, this);
 				} else {
 					swordsmansBucklerLife--;
 				}
 			}
 		}
 
-		this.hitPoints = this.hitPoints < 0 ? 0 : this.hitPoints;
-		viking.setHitPoints(viking.hitPoints() < 0 ? 0 : viking.hitPoints());
+		setHitPointsToZeroIfHitPointsAreNegative(this);
+		setHitPointsToZeroIfHitPointsAreNegative(viking);
 
-	}
-
-	public Swordsman equip(String item) {
-		if (BUCKLER.equals(item)) {
-			this.setBuckler(true);
-		}
-		return this;
-	}
-
-	public int hitPoints() {
-		return hitPoints;
-	}
-
-	public boolean hasBuckler() {
-		return hasBuckler;
-	}
-
-	public void setBuckler(boolean hasBuckler) {
-		this.hasBuckler = hasBuckler;
 	}
 
 }
