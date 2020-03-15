@@ -1,17 +1,21 @@
 package me.guillaume.duel;
 
-import java.util.function.IntPredicate;
+import static me.guillaume.duel.Weapon.GREAT_SWORD;
+import static me.guillaume.duel.Weapon.GREAT_SWORD_DAMAGE;
 
-public class Highlander {
+public class Highlander extends Warrior {
 
 	public Highlander() {
+		hitPoints = HIGHLANDER_HITPOINTS;
+		weapon = new Weapon(GREAT_SWORD, GREAT_SWORD_DAMAGE);
 	}
 
 	public Highlander(String string) {
 	}
 
-	public IntPredicate hitPoints() {
-		return null;
+	@Override
+	protected Warrior equip(String item) {
+		return this;
 	}
 
 }

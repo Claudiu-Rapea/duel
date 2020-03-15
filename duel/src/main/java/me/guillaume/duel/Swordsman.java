@@ -1,17 +1,15 @@
 package me.guillaume.duel;
 
-import static me.guillaume.duel.Buckler.BUCKLER;
+import static me.guillaume.duel.Item.ARMOR;
+import static me.guillaume.duel.Item.BUCKLER;
 
 import java.util.Optional;
 
 public class Swordsman extends Warrior {
 
-	private final Swordsman swordsman = this;
-
 	public Swordsman() {
 		hitPoints = SWORDSMAN_HITPOINTS;
 		weapon = new Weapon(Weapon.SWORD, Weapon.SWORD_DAMAGE);
-		buckler = Optional.empty();
 	}
 
 	public Swordsman(String string) {
@@ -22,20 +20,20 @@ public class Swordsman extends Warrior {
 		if (BUCKLER.equals(item)) {
 			buckler = Optional.of(new Buckler());
 		}
+
+		if (ARMOR.equals(item)) {
+			armor = Optional.of(new Armor(this));
+		}
+
 		return this;
 	}
 
-	public void engage(Highlander highlander) {
+	public void engage(Viking viking) {
+		fight(this, viking);
 	}
 
-	public void engage(Viking viking) {
-		while (swordsman.hitPoints() > 0 && viking.hitPoints() > 0) {
-			strike(swordsman, viking);
-			strike(viking, swordsman);
-		}
-
-		setHitPointsToZeroIfHitPointsAreNegative(swordsman);
-		setHitPointsToZeroIfHitPointsAreNegative(viking);
+	public void engage(Highlander highlander) {
+		fight(this, highlander);
 	}
 
 }
