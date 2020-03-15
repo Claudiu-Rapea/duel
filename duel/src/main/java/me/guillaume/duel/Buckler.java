@@ -1,25 +1,29 @@
 package me.guillaume.duel;
 
+import static me.guillaume.duel.Weapon.AXE_LABEL;
+
 import java.util.Optional;
 
 public class Buckler {
 
-	private int blockedHits = 0;
+	public static final String BUCKLER_LABEL = "buckler";
+
+	private int hits = 0;
 	private int axeHits = 0;
 
-	public void getHit(Warrior owner, Weapon weapon) {
+	public void hit(Weapon weapon, Warrior warrior) {
+		hits++;
 		if (axeHits > 3) {
-			owner.buckler = Optional.empty();
+			warrior.buckler = Optional.empty();
 			return;
 		}
-		if (Weapon.AXE.equals(weapon.getName())) {
+		if (AXE_LABEL.equals(weapon.getName())) {
 			axeHits++;
 		}
-		blockedHits++;
 	}
 
-	public int getBlockedHits() {
-		return blockedHits;
+	public int getHits() {
+		return hits;
 	}
 
 }

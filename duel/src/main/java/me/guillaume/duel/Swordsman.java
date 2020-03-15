@@ -1,7 +1,9 @@
 package me.guillaume.duel;
 
-import static me.guillaume.duel.Item.ARMOR;
-import static me.guillaume.duel.Item.BUCKLER;
+import static me.guillaume.duel.Armor.ARMOR_LABEL;
+import static me.guillaume.duel.Buckler.BUCKLER_LABEL;
+import static me.guillaume.duel.Weapon.SWORD_DAMAGE;
+import static me.guillaume.duel.Weapon.SWORD_LABEL;
 
 import java.util.Optional;
 
@@ -9,7 +11,7 @@ public class Swordsman extends Warrior {
 
 	public Swordsman() {
 		hitPoints = SWORDSMAN_HITPOINTS;
-		weapon = new Weapon(Weapon.SWORD, Weapon.SWORD_DAMAGE);
+		weapon = new Weapon(SWORD_LABEL, SWORD_DAMAGE);
 	}
 
 	public Swordsman(String string) {
@@ -17,11 +19,11 @@ public class Swordsman extends Warrior {
 
 	@Override
 	public Swordsman equip(String item) {
-		if (BUCKLER.equals(item)) {
+		if (BUCKLER_LABEL.equals(item)) {
 			buckler = Optional.of(new Buckler());
 		}
 
-		if (ARMOR.equals(item)) {
+		if (ARMOR_LABEL.equals(item)) {
 			armor = Optional.of(new Armor(this));
 		}
 
