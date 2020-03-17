@@ -6,52 +6,49 @@ import java.util.Optional;
 
 public abstract class Warrior {
 
-	protected static final int SWORDSMAN_HITPOINTS = 100;
-	protected static final int VIKING_HITPOINTS = 120;
-	protected static final int HIGHLANDER_HITPOINTS = 150;
-
 	protected int hitPoints;
-	protected int hits = 0;
 	protected Weapon weapon;
 	protected Optional<Buckler> buckler = Optional.empty();
 	protected Optional<Armor> armor = Optional.empty();
 
 	protected abstract Warrior equip(String item);
 
-	protected void fight(Warrior attacker, Warrior oponnent) {
+	protected void fight(Warrior attacker, Warrior opponent) {
 		if (attacker.armor.isPresent()) {
-			oponnent.getWeapon().decreaseDamage(3);
+			opponent.getWeapon().decreaseDamage(3);
 		}
 
-		while (attacker.hitPoints() > 0 && oponnent.hitPoints() > 0) {
-			strike(attacker, oponnent);
-			strike(oponnent, attacker);
+		while (attacker.hitPoints() > 0 && opponent.hitPoints() > 0) {
+			strike(attacker, opponent);
+			strike(opponent, attacker);
 		}
-
-		setHitPointsToZeroIfHitPointsAreNegative(attacker);
-		setHitPointsToZeroIfHitPointsAreNegative(oponnent);
 	}
 
 	private void strike(Warrior attacker, Warrior opponent) {
-		attacker.hits++;
+		attacker.getWeapon().increaseHits();
+
+		if (GREAT_SWORD_LABEL.equals(attacker.getWeapon().getName()) && attacker.getWeapon().getHits() % 3 == 0) {
+			return;
+		}
 
 		if (opponent.buckler.isPresent()) {
 			opponent.buckler.get().hit(attacker.getWeapon(), opponent);
 		}
 
-		if (opponent.buckler.isPresent() && opponent.buckler.get().getHits() % 2 == 0) {
+		if (opponent.buckler.isPresent() && opponent.buckler.get().isCooldownActive()) {
 			return;
 		}
 
-		if (GREAT_SWORD_LABEL.equals(attacker.getWeapon().getName()) && attacker.hits % 3 == 0) {
-			return;
-		}
-
-		opponent.setHitPoints(opponent.hitPoints() - attacker.getWeapon().getDamage());
+		subtractOpponentHitPoints(attacker, opponent);
 	}
 
-	private void setHitPointsToZeroIfHitPointsAreNegative(Warrior warrior) {
-		warrior.setHitPoints(warrior.hitPoints() < 0 ? 0 : warrior.hitPoints());
+	private void subtractOpponentHitPoints(Warrior attacker, Warrior opponent) {
+		int opponentHitPointsAfterStrike = opponent.hitPoints() - attacker.getWeapon().getDamage();
+		if (attacker.getWeapon().hasPoison()) {
+			opponentHitPointsAfterStrike -= attacker.getWeapon().getPoisonDamage();
+		}
+
+		opponent.setHitPoints(opponentHitPointsAfterStrike <= 0 ? 0 : opponentHitPointsAfterStrike);
 	}
 
 	protected int hitPoints() {
@@ -64,6 +61,13 @@ public abstract class Warrior {
 
 	protected Weapon getWeapon() {
 		return weapon;
+	}
+
+	protected void setWeapon(Weapon weapon) {
+		if (this.weapon.hasPoison()) {
+			weapon.putPoison();
+		}
+		this.weapon = weapon;
 	}
 
 }

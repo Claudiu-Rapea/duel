@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public class Viking extends Warrior {
 
+	private static final int VIKING_HITPOINTS = 120;
+
 	public Viking() {
 		hitPoints = VIKING_HITPOINTS;
 		weapon = new Weapon(AXE_LABEL, AXE_DAMAGE);

@@ -8,22 +8,23 @@ public class Buckler {
 
 	public static final String BUCKLER_LABEL = "buckler";
 
-	private int hits = 0;
 	private int axeHits = 0;
+	private boolean isCooldownActive = false;
 
 	public void hit(Weapon weapon, Warrior warrior) {
-		hits++;
-		if (axeHits > 3) {
-			warrior.buckler = Optional.empty();
-			return;
-		}
-		if (AXE_LABEL.equals(weapon.getName())) {
-			axeHits++;
+		isCooldownActive = !isCooldownActive;
+		if (isCooldownActive) {
+			if (AXE_LABEL.equals(weapon.getName())) {
+				axeHits++;
+			}
+			if (axeHits > 3) {
+				warrior.buckler = Optional.empty();
+			}
 		}
 	}
 
-	public int getHits() {
-		return hits;
+	public boolean isCooldownActive() {
+		return isCooldownActive;
 	}
 
 }
